@@ -1,0 +1,38 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Drop Server</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    </head>
+    <body>
+        <!--        <div id="drop_zone" ondrop="dropHandler(event);">-->
+        <!--            <p>Drag one or more files to this <i>drop zone</i>.</p>-->
+        <!--        </div>-->
+        <!--        <span th:text="${user.name}"></span>-->
+        <form method="POST" action="/upload" enctype="multipart/form-data">
+            <input type="file" name="file" id="file"/> <br/>
+            <!--            <input type="text" value="/tmp" name="destination"/><br/>-->
+            <!--            <input type="submit" value="Upload" name="upload" id="upload" />-->
+            <input type="submit"/>
+        </form>
+
+        <h1>Files</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Size</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="file: ${files}">
+                    <td th:text="${file.name}"></td>
+                    <td th:text="${file.humanReadableSize()}"></td>
+                    <td th:text="TODO"></td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>
