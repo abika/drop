@@ -4,6 +4,24 @@
         <meta charset="UTF-8">
         <title>Drop Server</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <style>
+            table, th, td {
+              border: 1px solid black;
+              border-collapse: collapse;
+            }
+            th, td {
+              padding: 5px;
+            }
+            th {
+              text-align: left;
+            }
+            td {
+              max-width: 0;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+        </style>
     </head>
     <body>
         <!--        <div id="drop_zone" ondrop="dropHandler(event);">-->
@@ -18,19 +36,19 @@
         </form>
 
         <h1>Files</h1>
-        <table>
+        <table style="width:100%">
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Size</th>
-                    <th>Date</th>
+                    <th>Modified</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="file: ${files}">
-                    <td th:text="${file.name}"></td>
-                    <td th:text="${file.humanReadableSize()}"></td>
-                    <td th:text="TODO"></td>
+                    <td style="width: 80%" th:text="${file.name}"></td>
+                    <td style="width: 10%" th:text="${file.humanReadableSize()}"></td>
+                    <td style="width: 10%" th:text="${file.humanReadableLastModifiedTime()}"></td>
                 </tr>
             </tbody>
         </table>

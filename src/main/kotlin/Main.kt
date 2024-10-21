@@ -1,13 +1,5 @@
 package org.abika
 
-//import io.ktor.server.application.install
-//import io.ktor.server.engine.embeddedServer
-//import io.ktor.server.netty.Netty
-//import io.ktor.server.routing.get
-//import io.ktor.server.routing.*
-//import io.ktor.server.thymeleaf.Thymeleaf
-//import io.ktor.server.thymeleaf.ThymeleafContent
-//import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.parameters.arguments.argument
@@ -24,16 +16,10 @@ import org.abika.model.FileModel
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 import java.nio.file.Paths
 
-/**
- * @author Alexander Bikadorov {@literal <goto@openmailbox.org>}
- */
-
-data class ThymeleafUser(val id: Int, val name: String)
-
 class Server : CliktCommand() {
-    val fileDirectory: String by argument(help="file directory")
+    val fileDirectory: String by argument(help="file folder that is published")
 
-    val fileModel = FileModel(Paths.get(".")) // TODO
+    val fileModel: FileModel by lazy { FileModel(Paths.get(fileDirectory)) }
 
     private val respondByIndexBody: suspend RoutingContext.() -> Unit = {
         call.respond(
@@ -46,7 +32,7 @@ class Server : CliktCommand() {
 
     override fun run() {
 
-        println("Starting server and waiting...")
+        println("Starting server with directory '${fileDirectory}' and waiting...")
         embeddedServer(Netty, 8080) {
             install(Thymeleaf) {
                 setTemplateResolver(ClassLoaderTemplateResolver().apply {
@@ -55,14 +41,16 @@ class Server : CliktCommand() {
                     characterEncoding = "utf-8"
                 })
             }
+
             routing {
 //            get("/") {
 //                call.respondText("Hello Foobar!"
 //                    , ContentType.Text.Html)
 //            }
                 get("/", respondByIndexBody)
+
                 post("upload") {
-                    println("Called!")
+                    println("Upload called")
                     val multiPartData = call.receiveMultipart()
                     val formContent = call.receiveParameters()
                     val file = formContent["file"]
@@ -77,7 +65,6 @@ class Server : CliktCommand() {
                         call.respond(HttpStatusCode.BadRequest)
                     }
                 }
-
             }
         }.start(wait = true)
     }
