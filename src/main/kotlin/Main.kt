@@ -27,6 +27,7 @@ import io.ktor.utils.io.readRemaining
 import kotlinx.io.readByteArray
 import org.abika.model.FileModel
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
+import org.thymeleaf.templateresolver.FileTemplateResolver
 import java.io.File
 import java.io.FileInputStream
 import java.nio.file.Paths
@@ -90,13 +91,21 @@ private class Server : CliktCommand() {
             println("Starting server with directory '${fileDirectory}' and waiting...")
 
             install(Thymeleaf) {
-                setTemplateResolver(ClassLoaderTemplateResolver().apply {
-                    prefix = "templates/thymeleaf/"
-                    suffix = ".html"
-                    characterEncoding = "utf-8"
-                })
+                setTemplateResolver(
+                    if (developmentMode) {
+                        FileTemplateResolver().apply {
+                            cacheManager = null
+                            prefix = "src/main/resources/templates/thymeleaf/"
+                            suffix = ".html"
+                        }
+                    } else {
+                        ClassLoaderTemplateResolver().apply {
+                            prefix = "templates/thymeleaf/"
+                            suffix = ".html"
+                            characterEncoding = "utf-8"
+                        }
+                    })
             }
-
             routing {
                 get("/", respondByIndexBody)
 
