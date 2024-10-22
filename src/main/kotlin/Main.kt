@@ -13,6 +13,8 @@ import io.ktor.server.engine.applicationEnvironment
 import io.ktor.server.engine.connector
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.engine.sslConnector
+import io.ktor.server.http.content.staticFiles
+import io.ktor.server.http.content.staticResources
 import io.ktor.server.netty.Netty
 import io.ktor.server.request.receiveMultipart
 import io.ktor.server.response.respond
@@ -107,6 +109,12 @@ private class Server : CliktCommand() {
                     })
             }
             routing {
+                if (developmentMode) {
+                    staticFiles("/static", File("src/main/resources/static"))
+                } else {
+                    staticResources("/static", "static")
+                }
+
                 get("/", respondByIndexBody)
 
                 post("/upload") {

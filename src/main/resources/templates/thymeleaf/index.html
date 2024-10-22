@@ -1,35 +1,58 @@
 <!DOCTYPE html >
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <script th:inline="javascript">
+        console.log("Hello World!!!");
+
+        function dragOverHandler(ev) {
+          console.log("File(s) in drop zone");
+
+          // Prevent default behavior (Prevent file from being opened)
+          ev.preventDefault();
+        }
+
+        function dropHandler(ev) {
+            console.log("File(s) dropped");
+
+            // Prevent default behavior (Prevent file from being opened)
+            ev.preventDefault();
+
+            if (ev.dataTransfer.items) {
+            // Use DataTransferItemList interface to access the file(s)
+            [...ev.dataTransfer.items].forEach((item, i) => {
+              // If dropped items aren't files, reject them
+              if (item.kind === "file") {
+                const file = item.getAsFile();
+                console.log(`… file[${i}].name = ${file.name}`);
+              }
+            });
+            } else {
+            // Use DataTransfer interface to access the file(s)
+            [...ev.dataTransfer.files].forEach((file, i) => {
+              console.log(`… file[${i}].name = ${file.name}`);
+            });
+            }
+        }
+    </script>
     <head>
-        <meta charset="UTF-8">
-        <title>Drop Server</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <style>
-            table, th, td {
-              border: 1px solid black;
-              border-collapse: collapse;
-            }
-            th, td {
-              padding: 5px;
-            }
-            th {
-              text-align: left;
-            }
-            td {
-              max-width: 0;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-            }
-        </style>
+        <meta charset="utf-8">
+            <title>
+                Drop Server
+            </title>
+            <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+        </meta>
+        <link rel="stylesheet" th:href="@{~/static/style.css}">
     </head>
     <body>
-        <!--        <div id="drop_zone" ondrop="dropHandler(event);">-->
-        <!--            <p>Drag one or more files to this <i>drop zone</i>.</p>-->
-        <!--        </div>-->
-        <!--        <span th:text="${user.name}"></span>-->
-        <form method="POST" action="/upload" enctype="multipart/form-data">
-            <input type="file" name="file" id="file"/> <br/>
+        <div class="dropzone" id="drop_zone"
+             ondrop="dropHandler(event);"
+             ondragover="dragOverHandler(event);">
+            <p>
+                Drop here
+            </p>
+        </div>
+        <form action="/upload" enctype="multipart/form-data" method="POST">
+            <input id="file" name="file" type="file"/>
+            <br/>
             <!--            <input type="text" value="/tmp" name="destination"/><br/>-->
             <!--            <input type="submit" value="Upload" name="upload" id="upload" />-->
             <input type="submit" value="Upload"/>
