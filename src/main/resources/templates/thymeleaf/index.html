@@ -12,13 +12,15 @@
     </head>
     <body>
         <div class="dropzone" id="drop_zone"
-             ondrop="dropHandler(event);"
-             ondragover="dragOverHandler(event);">
+             ondragover="dragOverHandler(event);"
+             ondragenter="dragEnterHandler(event);"
+             ondragleave="dragLeaveHandler(event);"
+             ondrop="dropHandler(event);">
             <p>
                 Drop here
             </p>
         </div>
-        <p id="statusMessage"></p>
+        <p id="status_message"></p>
 
         <h1>Files</h1>
         <table style="width:100%">
