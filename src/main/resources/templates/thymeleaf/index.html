@@ -16,9 +16,9 @@
              ondragenter="dragEnterHandler(event);"
              ondragleave="dragLeaveHandler(event);"
              ondrop="dropHandler(event);">
-            <p>
-                Drop here
-            </p>
+             <div class="vertical-center">
+                <p>Drop here</p>
+            </div>
         </div>
         <form id="files_form">
             <input id="files" name="file" type="file" multiple/>
@@ -37,9 +37,9 @@
             </thead>
             <tbody>
                 <tr th:each="file: ${files}">
-                    <td style="width: 80%" th:text="${file.name}"></td>
+                    <td style="width: 70%" th:text="${file.name}"></td>
                     <td style="width: 10%" th:text="${file.humanReadableSize()}"></td>
-                    <td style="width: 10%" th:text="${file.humanReadableLastModifiedTime()}"></td>
+                    <td style="width: 20%" th:text="${file.humanReadableLastModifiedTime()}"></td>
                 </tr>
             </tbody>
         </table>
