@@ -30,15 +30,19 @@ function dropHandler(event) {
   uploadFiles(event.dataTransfer.files);
 }
 
+function submitFormHandler(event, form) {
+  event.preventDefault();
+
+  const filesInput = document.getElementById('files');
+  uploadFiles(filesInput.files);
+
+  form.reset();
+}
+
 function uploadFiles(files) {
   if (files.length === 0) {
     updateStatusMessage('No files to upload!?');
     return;
-  }
-
-  const formData = new FormData();
-  for (const file of files) {
-    formData.append('file', file);
   }
 
   const xhr = new XMLHttpRequest();
@@ -58,7 +62,17 @@ function uploadFiles(files) {
   });
 
   xhr.open('post', '/upload');
+
+  const formData = new FormData();
+  for (const file of files) {
+    formData.append('file', file);
+  }
   xhr.send(formData);
 }
+
+const filesForm = document.getElementById("files_form");
+filesForm.addEventListener("submit", (event) => {
+  submitFormHandler(event, filesForm);
+});
 
 console.log("JS initialized");
